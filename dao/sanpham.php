@@ -1,332 +1,149 @@
 <?php
 require_once 'pdo.php';
 
-function add_sanpham($categories,$product_code,$ten_sp,$gia,$gia_giam,$img,$img1,$img2,$img3,$date,$mota,$special,$view){
-    $sql = "INSERT INTO sanpham (id_catalog, ma_sp, ten_sp, gia, giam_gia, hinh, hinh1, hinh2, hinh3, ngay_nhap, mo_ta, dac_biet, so_luot_xem) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
-    return pdo_execute($sql,$categories,$product_code,$ten_sp,$gia,$gia_giam,$img,$img1,$img2,$img3,$date,$mota,$special,$view);
-}
-
-function updates_sanpham($id,$categories,$product_code,$ten_sp,$gia,$gia_giam,$img,$img1,$img2,$img3,$date,$mota,$special){
-    $sql = "UPDATE sanpham SET id=?, id_catalog=?, ma_sp=?, ten_sp=?, gia=?,  giam_gia=?,  hinh=?,  hinh1=?,  hinh2=?,  hinh3=?,  ngay_nhap=?,  mo_ta=?,  dac_biet=? WHERE id=".$id;
-    return pdo_execute($sql,$id,$categories,$product_code,$ten_sp,$gia,$gia_giam,$img,$img1,$img2,$img3,$date,$mota,$special);
-}
-
-function updates_view_sanpham($id,$upview){
-    $sql = "UPDATE sanpham SET id=?,so_luot_xem=? WHERE id=".$id;
-    return pdo_execute($sql,$id,$upview);
-}
-
-function delete_sanpham($id){
-    $sql = 'DELETE FROM sanpham WHERE id= ?;';
-    return pdo_execute($sql,$id);
-}
-// lượt mua
-function get_soluong_sp(){
-    $sql = "SELECT COUNT(id) FROM sanpham WHERE 1";
-    $count = pdo_query_value($sql);
-    return $count;
-}
-function get_dssp_LuotMua($limit){
-    $sql = "SELECT *, 
-            (SELECT COUNT(*) FROM billchitiet WHERE billchitiet.id_product = sp.id) as luot_mua,
-            sp.id, sp.id_catalog, dm.ten_loai 
-            FROM sanpham sp 
-            INNER JOIN danhmuc dm ON sp.id_catalog = dm.id  
-            ORDER BY luot_mua DESC, sp.id DESC LIMIT " . $limit;
-    return pdo_query($sql);
-}
-
-function get_dssp_new($limit){
-    $sql = "SELECT  sp.id,sp.id_catalog, ten_loai, hinh, sp.gia, sp.giam_gia, sp.so_luot_xem, sp.ten_sp 
-            FROM sanpham sp 
-            INNER JOIN danhmuc dm ON sp.id_catalog = dm.id 
-            WHERE sp.ngay_nhap 
-            ORDER BY sp.ngay_nhap DESC LIMIT ".$limit;
-    return pdo_query($sql);
-}
-
-function get_dssp_best($limit){
-    $sql = "SELECT  *, sp.id as idsp, sp.id_catalog, sp.ten_sp as namesp, dm.ten_loai as namedm 
-            FROM sanpham sp 
-            LEFT JOIN danhmuc dm ON sp.id_catalog = dm.id 
-            WHERE sp.dac_biet = 1 
-            ORDER BY sp.id DESC LIMIT ".$limit;
-    return pdo_query($sql);
-}
-function get_dssp_best_2($limit){
-    $sql = "SELECT  * FROM sanpham WHERE dac_biet = 1 
-            ORDER BY id DESC LIMIT ".$limit;
-    return pdo_query($sql);
-}
-
-function get_dssp_view($limit){
-    $sql = "SELECT  *, sp.id, dm.ten_loai 
-            FROM sanpham sp 
-            INNER JOIN danhmuc dm ON sp.id_catalog = dm.id 
-            WHERE sp.so_luot_xem 
-            ORDER BY sp.so_luot_xem DESC, sp.id DESC LIMIT ".$limit;
-    return pdo_query($sql);
-}
-
-
-function get_dssp_all(){
-    $sql = "SELECT  *, sp.id, sp.id_catalog, dm.ten_loai FROM sanpham  INNER JOIN danhmuc dm ON sanpham.id_catalog = dm.id WHERE 1";
-    return pdo_query($sql);
-}
-
-function get_dssp($keyword, $categoryId, $limit,$sethome){
-    $sql = "SELECT  *,sp.id, dm.ten_loai FROM sanpham sp INNER JOIN danhmuc dm ON sp.id_catalog = dm.id WHERE 1";
-
-    if($categoryId > 0){
-        if($sethome==1){
-            $sql .=" AND sp.dac_biet=".$sethome;
-        }else{
-            $sql .=" AND sp.id_catalog=".$categoryId;
-        }
-    }
-    if($keyword != ""){
-        $sql .=" AND sp.ten_sp like '%".$keyword."%'";
-    }
-
-    $sql .= " ORDER BY sp.id DESC LIMIT ".$limit;
-    return pdo_query($sql);
-}
-
-
-function get_dssp_admin(){
-    $sql = "SELECT * FROM sanpham";
-    return pdo_query($sql);
-}
-
-function get_sp_view($id) {
-    $sql = "SELECT so_luot_xem FROM sanpham WHERE id=?";
-    return pdo_query_value($sql, $id);
-}
-
-function get_sp_id($id) {
-    $sql = "SELECT * FROM sanpham WHERE id=?";
-    return pdo_query($sql, $id);
-}
-function get_sproduct($id){
-    $sql = "SELECT *,sanpham.id,dm.ten_loai FROM sanpham INNER JOIN danhmuc dm ON sanpham.id_catalog = dm.id  WHERE sanpham.id=?";
-    return pdo_query_one($sql, $id);
-}
-
-function get_dssp_lienquan($categoryId, $id, $limit){
-    $sql = "SELECT * ,sanpham.id,dm.ten_loai FROM sanpham INNER JOIN danhmuc dm ON sanpham.id_catalog = dm.id  WHERE sanpham.id_catalog=? AND sanpham.id<>? ORDER BY sanpham.id DESC LIMIT ".$limit;
-    return pdo_query($sql, $categoryId, $id);
-}
-
-function get_iddm($id){
-    $sql = "SELECT id_catalog FROM sanpham WHERE id=?";
-    return pdo_query_value($sql, $id);
-}
-
-function searchProducts($keyword, $categoryId, $limit) {
-    $sql = "SELECT * FROM sanpham WHERE (ten_sp LIKE :keyword OR mo_ta LIKE :keyword)";
-    if ($categoryId != 0) {
-        $sql .= " AND id_catalog = :categoryId";
-    }
-
-    $sql .= " LIMIT :limit";
-
-    $params = [
-        ':keyword' => '%' . $keyword . '%',
-        ':limit' => $limit,
+function mock_products() {
+    return [
+        [
+            'id' => 1, 
+            'iddm' => 1, 
+            'ten' => 'Sofa Da Thật Nhập Khẩu Italia', 
+            'gia' => 45000000, 
+            'giamgia' => 39900000, 
+            'hinh' => 'https://product.hstatic.net/1000405230/product/sofa-da_c8bdfc2e5a5940c3b0eb6821fa7934bb_large.jpg', 
+            'mota' => 'Sofa da bò tót thật 100% nhập khẩu từ Ý. Thiết kế hiện đại mang lại vẻ sang trọng cho phòng khách.'
+        ],
+        [
+            'id' => 2, 
+            'iddm' => 2, 
+            'ten' => 'Bàn Ăn Mặt Đá Cẩm Thạch Cao Cấp', 
+            'gia' => 25000000, 
+            'giamgia' => 21000000, 
+            'hinh' => 'https://product.hstatic.net/1000405230/product/ban-an-ceremic_edc54df3ab6545b7adf0e9220ef1e8cc_large.jpg', 
+            'mota' => 'Bàn ăn cao cấp dành cho 6-8 người. Chân mạ PVD vàng gold kết hợp mặt đá cẩm thạch chống xước.'
+        ],
+        [
+            'id' => 3, 
+            'iddm' => 3, 
+            'ten' => 'Giường Ngủ Master Bọc Da', 
+            'gia' => 35000000, 
+            'giamgia' => 0, 
+            'hinh' => 'https://product.hstatic.net/1000405230/product/giuong_fcdb27b385a4435aa19ea61f77fbea86_large.jpg', 
+            'mota' => 'Không gian phòng ngủ đẳng cấp hoàng gia với thiết kế tinh xảo, chất liệu êm ái cho giấc ngủ hoàn hảo.'
+        ],
+        [
+            'id' => 4, 
+            'iddm' => 4, 
+            'ten' => 'Tủ Rượu Gỗ Óc Chó Walnut', 
+            'gia' => 18000000, 
+            'giamgia' => 15500000, 
+            'hinh' => 'https://product.hstatic.net/1000405230/product/tu-ruou-go-soi_671bbd3c103248e58a78ccbe8a00ddbb_large.jpg', 
+            'mota' => 'Thiết kế tinh xảo bề mặt vân gỗ tự nhiên. Ngăn chứa rộng rãi tối ưu hóa khả năng decor.'
+        ],
+        [
+            'id' => 5, 
+            'iddm' => 1, 
+            'ten' => 'Sofa Nỉ Cao Cấp Góc Chữ L', 
+            'gia' => 12000000, 
+            'giamgia' => 0, 
+            'hinh' => 'https://product.hstatic.net/1000405230/product/sofa-goc-hien-dai_7d353683afee4b7eaff56efba227e85c_large.png', 
+            'mota' => 'Sofa hiện đại nhỏ gọn tối ưu không gian. Tiện lợi khi nằm nghỉ ngơi.'
+        ],
+        [
+            'id' => 6, 
+            'iddm' => 5, 
+            'ten' => 'Đèn Chùm Pha Lê Tiệp Khắc', 
+            'gia' => 5500000, 
+            'giamgia' => 4900000, 
+            'hinh' => 'https://product.hstatic.net/1000405230/product/den-chum_9e3d55ab8dce49fcab17ccf5f0884d6b_large.jpg', 
+            'mota' => 'Thắp sáng không gian lộng lẫy, chất liệu pha lê chùm siêu sáng và lấp lánh.'
+        ],
+        [
+            'id' => 7, 
+            'iddm' => 1, 
+            'ten' => 'Sofa Da Thông Minh Chỉnh Điện', 
+            'gia' => 32000000, 
+            'giamgia' => 28000000, 
+            'hinh' => 'https://product.hstatic.net/1000405230/product/sofa-chinh-dien_db5d0df8357d4cc6a7ecf3db1ecadd70_large.jpg', 
+            'mota' => 'Tích hợp chức năng bật ngả chân bằng nút bấm điện tiện nghi.'
+        ],
+        [
+            'id' => 8, 
+            'iddm' => 2, 
+            'ten' => 'Ghế Ăn Bọc Da Cao Cấp', 
+            'gia' => 2200000, 
+            'giamgia' => 1800000, 
+            'hinh' => 'https://product.hstatic.net/1000405230/product/ghe-an_fb4b8e2b86ab48ea808ca14c77ea8c7a_large.jpg', 
+            'mota' => 'Sử dụng chân sắt tĩnh điện cực kì chắc chắn, đệm da lót siêu êm mông.'
+        ],
     ];
+}
 
-    if ($categoryId != 0) {
-        $params[':categoryId'] = $categoryId;
+/**
+ * Lấy danh sách toàn bộ sản phẩm (hoặc giới hạn)
+ */
+function sanpham_all($limit = 12) {
+    $sql = "SELECT * FROM sanpham ORDER BY id DESC LIMIT $limit";
+    $result = pdo_query($sql);
+    if (empty($result)) {
+        return mock_products();
     }
-
-    return pdo_query($sql, $params);
+    return $result;
 }
 
-function getPopularCategories() {
-    $sql = "SELECT id, ten_loai FROM danhmuc ORDER BY stt DESC LIMIT 5";
-    return pdo_query($sql);
+/**
+ * Lấy chuyên sâu các sản phẩm nổi bật
+ */
+function sanpham_noibat($limit = 4) {
+    $sql = "SELECT * FROM sanpham WHERE noibat = 1 ORDER BY id DESC LIMIT $limit";
+    $result = pdo_query($sql);
+    if (empty($result)) {
+        return array_slice(mock_products(), 0, $limit);
+    }
+    return $result;
 }
-function showsp($dssp) {
-    $html_dssp = '';
 
-    if (is_array($dssp) && count($dssp) > 0) {
-        foreach ($dssp as $sp) {
-            $specialText = '';
+/**
+ * Lấy sản phẩm đang có giá mới/khuyến mãi lớn
+ */
+function sanpham_khuyenmai($limit = 4) {
+    $sql = "SELECT * FROM sanpham WHERE giamgia > 0 ORDER BY giamgia ASC LIMIT $limit";
+    $result = pdo_query($sql);
+    if (empty($result)) {
+        $mocks = mock_products();
+        $km = array_filter($mocks, function($p) {
+            return $p['giamgia'] > 0;
+        });
+        return array_slice($km, 0, $limit);
+    }
+    return $result;
+}
 
-            if (isset($sp['dac_biet'])) {
-                if ($sp['dac_biet'] == 1) {
-                    $specialText = 'HOT';
-                } else if ($sp['dac_biet'] == 2) {
-                    $specialText = 'NEW';
-                }
-            }
-
-            $html_dssp .= '<div class="pro' . (isset($sp['dac_biet']) ? ' special' : '') . '">
-                              <a href="index.php?pg=sproduct&id=' . $sp['id'] . '">
-                                  <img src="layout/img/products/' . $sp['hinh'] . '" alt="" height="380px;">
-                                  ' . ($specialText ? '<div class="special-text">' . $specialText . '</div>' : '') . '
-                              </a>
-                              <div class="des">
-                                  <span class="category">'.$sp['id_catalog'].' - ' .get_name_catalog($sp['id_catalog']) . '</span>
-                                  ' . (isset($sp['so_luot_xem']) ? '<div class="views"><i class="fas fa-eye"></i> ' . $sp['so_luot_xem'] . '</div>' : '') . '
-                                  <a href="index.php?pg=sproduct&id=' . $sp['id'] . '">
-                                      <h5>' . $sp['ten_sp'] . '</h5>
-                                  </a>
-                                  <div class="star">
-                                      <i class="fas fa-star"></i>
-                                      <i class="fas fa-star"></i>
-                                      <i class="fas fa-star"></i>
-                                      <i class="fas fa-star"></i>
-                                      <i class="fas fa-star"></i>
-                                  </div>
-                                  <h4>' . number_format($sp['gia']) . ' VNĐ   ' . (isset($sp['gia_giam']) ? $sp['gia_giam'] : '') . ' </h4>
-                              </div>
-                              <form method="post" action="index.php?pg=cart">
-                                <input type="hidden" name="pg" value="cart">
-                                <input type="hidden" name="id" value="' . $sp['id'] . '">
-                                <input type="hidden" name="name" value="' . $sp['ten_sp'] . '">
-                                <input type="hidden" name="img" value="' . $sp['hinh'] . '">
-                                <input type="hidden" name="price" value="' . $sp['gia'] . '">
-                                <input type="hidden" name="soluong" value="1">
-                                <button type="submit" name="cart" class="cart"><i class="fal fa-shopping-cart"></i></button>
-                              </form>
-                          </div>';
+/**
+ * Láy chi tiết 1 sản phẩm
+ */
+function sanpham_detail($id) {
+    $sql = "SELECT * FROM sanpham WHERE id=?";
+    $result = pdo_query_one($sql, $id);
+    if (empty($result)) {
+        $mocks = mock_products();
+        foreach($mocks as $p) {
+            if($p['id'] == $id) return $p;
         }
     }
-
-    return $html_dssp;
+    return $result;
 }
 
-function showchitietsp($sp) {
-    $html_chitietsp = '';
-    extract($sp);
-    $html_chitietsp .= '<div class="single-pro-image">
-                            <img src="layout/img/products/'.$hinh.'" width="100%" height="650px" id="MainImg" alt="" style="border:1px solid black;">
-                            <div class="small-img-group" style="margin-top:5px;">
-                                <div class="small-img-col">
-                                    <img src="layout/img/products/'. $hinh .'" width="100%" class="small-img" alt="" height="170px" style="border:1px solid black;">
-                                </div>
-                                <div class="small-img-col">
-                                    <img src="layout/img/products/'. $hinh1 .'" width="100%" class="small-img" alt="" height="170px" style="border:1px solid black;">
-                                </div>
-                                <div class="small-img-col">
-                                    <img src="layout/img/products/'. $hinh2 .'" width="100%" class="small-img" alt="" height="170px" style="border:1px solid black;">
-                                </div>
-                                <div class="small-img-col">
-                                    <img src="layout/img/products/'. $hinh3 .'" width="100%" class="small-img" alt="" height="170px" style="border:1px solid black;">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="single-pro-details">
-                            <h6>Home / ' . $ten_loai . '</h6>
-                            <h3 style="font-size:40px">'. $ten_sp .'</h3>
-                            <h2>'. number_format($gia) .' VNĐ</h2>
-                            
-                            <form method="post" action="index.php?pg=cart" onsubmit="return validateQuantity()">
-                                <input type="hidden" name="pg" value="cart">
-                                <input type="hidden" name="id" value="' . $id . '">
-                                <input type="hidden" name="name" value="' . $ten_sp . '">
-                                <input type="hidden" name="img" value="'. $hinh .'">
-                                <input type="hidden" name="price" value="'. $gia .'">
-                                <input type="number" name="soluong" id="soluong" value="1" min="1">
-                                <button class="normal" type="submit" name="cart">Thêm Vào Giỏ Hàng</button>
-                            </form>
-                            <h4>THÔNG TIN SẢN PHẨM</h4>
-                            <span>'. $mo_ta .'
-                            </span>
-                        </div>
-                        <script>
-                            function validateQuantity() {
-                                var quantity = document.getElementById("soluong").value;
-                                if (quantity < 1) {
-                                    alert("Số lượng phải lớn hơn hoặc bằng 1.");
-                                    return false;
-                                }
-                                return true;
-                            }
-                        </script>';
-    return $html_chitietsp;
-}
-
-
-function showluotmua($dssp_luotmua) {
-    $html_dssp_luotmua = '';
-
-    if (is_array($dssp_luotmua) && count($dssp_luotmua) > 0) {
-        foreach ($dssp_luotmua as $sp) {
-            $specialText = '';
-
-            if (isset($sp['dac_biet'])) {
-                if ($sp['dac_biet'] == 1) {
-                    $specialText = 'HOT';
-                } elseif ($sp['dac_biet'] == 2) {
-                    $specialText = 'NEW';
-                }
-            }
-
-            $html_dssp_luotmua .= '<div class="pro' . (isset($sp['dac_biet']) ? ' special' : '') . '">
-                                    <a href="index.php?pg=sproduct&id=' . $sp['id'] . '">
-                                        <img src="layout/img/products/' . $sp['hinh'] . '" alt="">
-                                        ' . ($specialText ? '<div class="special-text">' . $specialText . '</div>' : '') . '
-                                    </a>
-                                    <h6><a href="index.php?pg=sproduct&id=' . $sp['id'] . '"></a></h6>
-                                    <div class="des">
-                                        <span>' . $sp['ten_loai'] . '</span>
-                                        ' . (isset($sp['so_luot_xem']) ? '<div class="views"><i class="fas fa-eye"></i> ' . $sp['so_luot_xem'] . '</div>' : '') . '
-                                        <a href="index.php?pg=sproduct&id=' . $sp['id'] . '">
-                                            <h5>' . $sp['ten_sp'] . '</h5>
-                                            
-                                        </a>
-                                        <div class="star">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <h4>' . number_format($sp['gia']) . ' VNĐ</h4>
-                                    </div>
-                                    <form method="post" action="index.php?pg=cart">
-                                        <input type="hidden" name="pg" value="cart">
-                                        <input type="hidden" name="id" value="' . $sp['id'] . '">
-                                        <input type="hidden" name="name" value="' . $sp['ten_sp'] . '">
-                                        <input type="hidden" name="img" value="' . $sp['hinh'] . '">
-                                        <input type="hidden" name="price" value="' . $sp['gia'] . '">
-                                        <input type="hidden" name="soluong" value="1">
-                                        <button type="submit" name="cart" class="cart"><i class="fal fa-shopping-cart"></i></button>
-                                    </form>
-                                </div>';
-        }
+/**
+ * Lấy sản phẩm theo danh mục
+ */
+function sanpham_by_danhmuc($iddm) {
+    $sql = "SELECT * FROM sanpham WHERE iddm=?";
+    $result = pdo_query($sql, $iddm);
+    if (empty($result)) {
+        $mocks = mock_products();
+        return array_filter($mocks, function($p) use ($iddm) {
+            return $p['iddm'] == $iddm;
+        });
     }
-
-    return $html_dssp_luotmua;
+    return $result;
 }
-
-
-
-
-function show_sp_admin($dssp){
-    $html_dssp_admin = '';
-    $i = 0;
-    foreach ($dssp as $item){
-        $i++;
-        $html_dssp_admin .= '<tr>
-                                <td>'.$i.'</td>
-                                <td><img src="../layout/img/products/'.$item['hinh'].'" alt="" width="82px"></td>
-                                <td>'.$item['ten_sp'].'</td>
-                                <td>'.number_format($item['gia']).' VNĐ</td>
-                                <td>'.$item['giam_gia'].' VNĐ</td>
-                                <td>'.$item['ngay_nhap'].'</td>
-                                <td>
-                                    <a href="index.php?pg=products_updates&id_updates='.$item['id'].'" class="btn btn-warning"><i
-                                            class="fa-solid fa-pen-to-square"></i> Sửa</a>
-                                    <a href="index.php?pg=products&id_delete='.$item['id'].'" class="btn btn-danger"><i
-                                            class="fa-solid fa-trash"></i> Xóa</a>
-                                </td>
-                            </tr>';
-    }
-    return $html_dssp_admin;
-}
-
-?>

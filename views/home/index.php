@@ -1,170 +1,101 @@
-    <!-- Floating Action Buttons -->
-    <div class="floating-actions">
-        <a href="#" class="fab fab-phone"><i class="fa-solid fa-phone"></i></a>
-        <a href="#" class="fab fab-zalo"><i class="fa-solid fa-comment-dots"></i></a>
-        <a href="#" class="fab fab-messenger"><i class="fa-brands fa-facebook-messenger"></i></a>
-        <a href="#" class="fab fab-location"><i class="fa-solid fa-location-dot"></i></a>
+<div class="banner">
+    <a href="<?= BASE_URL ?>index.php?controller=product&action=list">
+        <img src="https://theme.hstatic.net/1000405230/1000570560/14/slideshow_1.jpg?v=173" alt="Banner Pho Xinh" style="width: 100%; display:block; object-fit:cover; min-height: 400px; max-height: 700px;">
+    </a>
+</div>
+
+<section class="container" style="padding: 60px 15px 40px;">
+    <div class="section-title">
+        <h2 style="font-size:26px; letter-spacing:2px;">SẢN PHẨM MỚI</h2>
     </div>
-
-    <main>
-        <!-- Hero Section -->
-        <section class="hero-slider">
-            <div class="slide active" style="background-image: url('images/hero_banner.png');">
-                <div class="slide-overlay"></div>
-                <div class="slide-content">
-                    <h1 class="slide-title">DISCOVER<br>THE NEW <span class="teal-x">X</span> SOFA<br>COLLECTION</h1>
-                    <p class="slide-subtitle">DUTCH DESIGN - ASIAN SOUL</p>
-                    <a href="index.php?controller=product&action=index" class="btn btn-primary">XEM CHI TIẾT</a>
+    <div class="product-grid-4">
+        <?php foreach(array_slice($sp_noibat, 0, 8) as $sp): ?>
+            <div class="product-item">
+                <div class="product-img">
+                    <a href="<?= BASE_URL ?>index.php?controller=product&action=detail&id=<?= $sp['id'] ?>">
+                        <img src="<?= $sp['hinh'] ?>" alt="<?= $sp['ten'] ?>">
+                    </a>
                 </div>
-            </div>
-            <!-- Slider Controls -->
-            <button class="slider-btn prev-btn"><i class="fa-solid fa-chevron-left"></i></button>
-            <button class="slider-btn next-btn"><i class="fa-solid fa-chevron-right"></i></button>
-            <div class="slider-dots">
-                <span class="dot active"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </div>
-        </section>
-
-        <!-- Promo Banner -->
-        <section class="promo-banner">
-            <p>ĐÓN NĂM MỚI - SẮM NỘI THẤT MỚI</p>
-        </section>
-
-        <!-- Featured Products Grids -->
-        <section class="product-section container">
-            <h2 class="section-title">BỘ SƯU TẬP MỚI VỀ</h2>
-            
-            <div class="product-grid">
-                <!-- Product 1 -->
-                <div class="product-card">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1577140917170-285929fb55b7?q=80&w=800&auto=format&fit=crop" alt="Bàn ăn cao cấp">
-                        <div class="product-actions">
-                            <button class="action-btn"><i class="fa-solid fa-bag-shopping"></i></button>
-                            <button class="action-btn"><i class="fa-regular fa-heart"></i></button>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name"><a href="index.php?controller=product&action=detail&id=1">Bàn Ăn Đá Marble Light Brown</a></h3>
-                        <p class="product-price">115,500,000 VNĐ</p>
-                    </div>
-                </div>
-                
-                <!-- Product 2 -->
-                <div class="product-card">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1621508685018-c5bfae710892?q=80&w=800&auto=format&fit=crop" alt="Bàn ăn Volakas">
-                        <div class="product-actions">
-                            <button class="action-btn"><i class="fa-solid fa-bag-shopping"></i></button>
-                            <button class="action-btn"><i class="fa-regular fa-heart"></i></button>
-                        </div>
-                        <div class="badge badge-soldout">SOLD OUT</div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name"><a href="index.php?controller=product&action=detail&id=2">Bàn Ăn Đá Volakas</a></h3>
-                        <p class="product-price">125,500,000 VNĐ</p>
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="product-card">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1533090368676-1fd25485d442?q=80&w=800&auto=format&fit=crop" alt="Bàn tròn đen">
-                        <div class="product-actions">
-                            <button class="action-btn"><i class="fa-solid fa-bag-shopping"></i></button>
-                            <button class="action-btn"><i class="fa-regular fa-heart"></i></button>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name"><a href="index.php?controller=product&action=detail&id=3">Bàn Ăn Tròn Đá Black Marquina</a></h3>
-                        <p class="product-price">18,500,000 VNĐ</p>
-                    </div>
-                </div>
-
-                <!-- Product 4 -->
-                <div class="product-card">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1544457070-4cd773b4d71e?q=80&w=800&auto=format&fit=crop" alt="Bàn tròn trắng">
-                        <div class="product-actions">
-                            <button class="action-btn"><i class="fa-solid fa-bag-shopping"></i></button>
-                            <button class="action-btn"><i class="fa-regular fa-heart"></i></button>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name"><a href="index.php?controller=product&action=detail&id=4">Bàn Ăn Tròn Đá Jazz White</a></h3>
-                        <p class="product-price">18,500,000 VNĐ</p>
+                <div class="product-info">
+                    <h3 class="product-title" style="font-size:13px; text-transform:uppercase;">
+                        <a href="<?= BASE_URL ?>index.php?controller=product&action=detail&id=<?= $sp['id'] ?>"><?= $sp['ten'] ?></a>
+                    </h3>
+                    <div class="product-price">
+                        <?php if($sp['giamgia'] > 0): ?>
+                            <?= number_format($sp['giamgia'], 0, ',', '.') ?>đ 
+                            <span class="price-old"><?= number_format($sp['gia'], 0, ',', '.') ?>đ</span>
+                        <?php else: ?>
+                            <?= number_format($sp['gia'], 0, ',', '.') ?>đ
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
+        <?php endforeach; ?>
+    </div>
+    <div class="text-center" style="margin-top:40px; text-align:center;">
+        <a href="<?= BASE_URL ?>index.php?controller=product&action=list" class="btn btn-outline" style="border: 1px solid var(--text-dark); background: transparent; padding: 12px 40px;">Xem tiếp</a>
+    </div>
+</section>
 
-            <div class="text-center mt-4">
-                <a href="index.php?controller=product&action=index" class="see-more-link">XEM THÊM <i class="fa-solid fa-arrow-right-long"></i></a>
+<section style="background: #fdfdfd; padding: 50px 0;">
+    <div class="container">
+        <div class="section-title">
+            <h2 style="font-size:26px; letter-spacing:2px;">THƯƠNG HIỆU NỔI BẬT</h2>
+        </div>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:30px; margin-bottom: 30px;">
+            <div style="position:relative; cursor:pointer;" class="brand-box">
+                <a href="<?= BASE_URL ?>index.php?controller=product&action=list">
+                    <img src="https://theme.hstatic.net/1000405230/1000570560/14/hb_image1.jpg?v=173" alt="Hoang Nam Luxurious" style="width:100%; display:block; filter:brightness(0.85);">
+                    <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+                        <h3 style="color:#fff; font-size: 24px; letter-spacing: 2px; text-transform:uppercase; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Hoang Nam Luxurious</h3>
+                    </div>
+                </a>
             </div>
-        </section>
-
-        <!-- Categories Section -->
-        <section class="categories-grid container">
-            <a href="index.php?controller=product&action=index" class="category-box" style="background-image: url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=800&auto=format&fit=crop');">
-                <div class="category-overlay"></div>
-                <div class="category-content">
-                    <h3>PHÒNG KHÁCH</h3>
-                    <span class="category-link">Xem thêm</span>
-                </div>
-            </a>
-            
-            <a href="index.php?controller=product&action=index" class="category-box" style="background-image: url('https://images.unsplash.com/photo-1505693314120-0d443867891c?q=80&w=800&auto=format&fit=crop');">
-                <div class="category-overlay"></div>
-                <div class="category-content">
-                    <h3>PHÒNG NGỦ</h3>
-                    <span class="category-link">Xem thêm</span>
-                </div>
-            </a>
-
-            <a href="index.php?controller=product&action=index" class="category-box" style="background-image: url('https://images.unsplash.com/photo-1617806118233-18e1c0955f0d?q=80&w=800&auto=format&fit=crop');">
-                <div class="category-overlay"></div>
-                <div class="category-content">
-                    <h3>PHÒNG ĂN</h3>
-                    <span class="category-link">Xem thêm</span>
-                </div>
-            </a>
-            
-            <a href="index.php?controller=product&action=index" class="category-box" style="background-image: url('https://images.unsplash.com/photo-1550254478-ead40cc54513?q=80&w=800&auto=format&fit=crop');">
-                <div class="category-overlay"></div>
-                <div class="category-content">
-                    <h3>HOÀNG NAM LUXURIOUS</h3>
-                    <span class="category-link">Xem thêm</span>
-                </div>
-            </a>
-
-            <a href="index.php?controller=product&action=index" class="category-box" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop');">
-                <div class="category-overlay"></div>
-                <div class="category-content">
-                    <h3>D7 LIFESTYLE</h3>
-                    <span class="category-link">Xem thêm</span>
-                </div>
-            </a>
-
-            <a href="index.php?controller=product&action=index" class="category-box" style="background-image: url('https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800&auto=format&fit=crop');">
-                <div class="category-overlay"></div>
-                <div class="category-content">
-                    <h3>ASHLEY FURNITURE</h3>
-                    <span class="category-link">Xem thêm</span>
-                </div>
-            </a>
-        </section>
-
-        <!-- Newsletter Section -->
-        <section class="newsletter-section" style="background-image: url('https://images.unsplash.com/photo-1600607688969-a5bfcd646154?q=80&w=1600&auto=format&fit=crop');">
-            <div class="newsletter-overlay"></div>
-            <div class="newsletter-content">
-                <h2 class="newsletter-title">BẢN TIN</h2>
-                <p>Đăng ký nhận bản tin của Phố Xinh để cập nhật những sản phẩm mới,<br>nhận thông tin ưu đãi đặc biệt và thông tin giảm giá khác.</p>
-                <form class="newsletter-form">
-                    <input type="email" placeholder="Nhập email của bạn" required>
-                    <button type="submit" class="btn btn-black">ĐĂNG KÝ</button>
-                </form>
+            <div style="position:relative; cursor:pointer;" class="brand-box">
+                <a href="<?= BASE_URL ?>index.php?controller=product&action=list">
+                    <img src="https://theme.hstatic.net/1000405230/1000570560/14/hb_image2.jpg?v=173" alt="Ashley Furniture" style="width:100%; display:block; filter:brightness(0.85);">
+                    <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+                        <h3 style="color:#fff; font-size: 24px; letter-spacing: 2px; text-transform:uppercase; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Ashley Furniture</h3>
+                    </div>
+                </a>
             </div>
-        </section>
-    </main>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:30px;">
+            <div><img src="https://theme.hstatic.net/1000405230/1000570560/14/hb_image3.jpg?v=173" style="width:100%; object-fit:cover;"></div>
+            <div><img src="https://theme.hstatic.net/1000405230/1000570560/14/hb_image4.jpg?v=173" style="width:100%; object-fit:cover;"></div>
+            <div><img src="https://theme.hstatic.net/1000405230/1000570560/14/hb_image5.jpg?v=173" style="width:100%; object-fit:cover;"></div>
+        </div>
+    </div>
+</section>
+
+<section class="container" style="padding: 60px 15px 80px;">
+    <div class="section-title">
+        <h2 style="font-size:26px; letter-spacing:2px;">BẢN TIN</h2>
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:30px;">
+        <div class="news-item">
+            <a href="#"><img src="https://file.hstatic.net/1000405230/article/3_e3e9d8e7ea504a37b3e2b4f65c6970dc_large.jpg" alt="News" style="width:100%; margin-bottom:15px; height:250px; object-fit:cover;"></a>
+            <h4 style="font-size:15px; margin-bottom:10px; text-transform:uppercase; font-family:var(--font-heading);"><a href="#">KHÔNG GIAN SỐNG CHUẨN MỰC TỪ ROCHE BOBOIS</a></h4>
+            <p style="font-size:14px; color:var(--text-muted); line-height: 1.5;">Khám phá nghệ thuật sắp đặt không gian sống theo phong cách Parisian thanh lịch và lãng mạn.</p>
+        </div>
+        <div class="news-item">
+            <a href="#"><img src="https://file.hstatic.net/1000405230/article/1_d28dbd6cdaae4219a1db6945a8e3f9a7_large.jpg" alt="News" style="width:100%; margin-bottom:15px; height:250px; object-fit:cover;"></a>
+            <h4 style="font-size:15px; margin-bottom:10px; text-transform:uppercase; font-family:var(--font-heading);"><a href="#">BỘ SƯU TẬP SOFA DA THẬT 100% NHẬP KHẨU YTALIA</a></h4>
+            <p style="font-size:14px; color:var(--text-muted); line-height: 1.5;">Những ấn phẩm sofa da thủ công tuyệt tác vĩ đại nhất từ nước Ý đã có sẵn tại showroom Nội Thất Phố Xinh.</p>
+        </div>
+        <div class="news-item">
+            <a href="#"><img src="https://file.hstatic.net/1000405230/article/2_88db8b32ce554b7c8443eeb29cce2f77_large.jpg" alt="News" style="width:100%; margin-bottom:15px; height:250px; object-fit:cover;"></a>
+            <h4 style="font-size:15px; margin-bottom:10px; text-transform:uppercase; font-family:var(--font-heading);"><a href="#">BÍ QUYẾT CHỌN MUA BÀN ĂN PHÙ HỢP GIA ĐÌNH VIỆT</a></h4>
+            <p style="font-size:14px; color:var(--text-muted); line-height: 1.5;">Cùng chuyên gia Phố Xinh điểm qua những lưu ý cực kì quan trọng khi chọn mua bàn ghế ăn gia đình.</p>
+        </div>
+    </div>
+</section>
+
+<style>
+.brand-box:hover img { filter: brightness(1) !important; transition: 0.3s ease;}
+.news-item img { transition: 0.3s; }
+.news-item:hover img { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.news-item a { color: var(--text-dark); }
+.news-item h4 a:hover { color: var(--primary-color); }
+</style>
